@@ -1,0 +1,79 @@
+﻿@page "/"
+@rendermode InteractiveServer
+
+<PageTitle>Colorin</PageTitle>
+
+<h1>Colorin</h1>
+
+<table class="table">
+    @foreach (var fila in colores)
+    {
+        <tr>
+            @foreach (var color in fila)
+            {
+                <td style="background-color: @color.color">
+                    <input class="form-control" @bind="color.texto" @onkeyup="verificarColores" />
+                </td>
+            }
+        </tr>
+    }
+</table>
+
+<div>
+    <span>Cantidad de Rojos: @red</span>
+    <span>Cantidad de Verdes: @green</span>
+    <span>Cantidad de Azules: @blue</span>
+</div>
+
+<button @onclick="verificarColores" >Guardar</button>
+
+@code {
+    private int red = 0;
+    private int green = 0;
+    private int blue = 0;
+
+    class colorInput {
+        public string texto {get; set; }
+        public string color {get; set; }
+    }
+
+    private List<List<colorInput>> colores = new List<List<colorInput>>();
+
+    protected override void OnInitialized(){
+        for(int i = 0; i < 5; i++){
+            colores.Add(new List<colorInput>());
+            
+            for(int j = 0; j < 5; j++){
+                colores[i].Add(new colorInput {texto= "", color = "transparent"});
+            }
+        }
+    }
+
+    private void verificarColores(){
+    red = 0;
+    green = 0;
+    blue = 0;
+
+    foreach(var fila in colores){
+        foreach(var celda in fila){
+            switch (celda.texto.ToLower()){
+                case "rojo":
+                    red++;
+                    celda.color = "red";
+                    break;
+                case "verde":
+                    green++;
+                    celda.color = "green";
+                    break;
+                case "azul":
+                    blue++;
+                    celda.color = "blue";
+                    break;
+                default:
+                    celda.color = "transparent";
+                    break;  
+            }
+        }
+    }
+    }
+}
